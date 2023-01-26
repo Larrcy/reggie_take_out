@@ -10,10 +10,12 @@ spring:
       username: root
       password: 123456
   redis:
-    host: localhost
+    host: 127.0.0.1
     port: 6379
-    password: root@
-    database: 0
+    database: 1
+  cache:
+    redis:
+      time-to-live: 1800000 #设置缓存数据的过期时间
 mybatis-plus:
   configuration:
     #在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，按照驼峰命名法映射
