@@ -60,9 +60,11 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:5.3.6" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-oxm:5.3.6" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-aop:5.3.6" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-context-support:5.3.6" level="project" />
     <orderEntry type="library" name="Maven: redis.clients:jedis:3.3.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-pool2:2.9.0" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-cache:2.4.5" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-context-support:5.3.6" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-beans:5.3.6" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-starter-test:2.4.5" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test:2.4.5" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test-autoconfigure:2.4.5" level="project" />
@@ -104,7 +106,6 @@
     <orderEntry type="library" name="Maven: org.glassfish:jakarta.el:3.0.3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tomcat.embed:tomcat-embed-websocket:9.0.45" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-web:5.3.6" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-beans:5.3.6" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-webmvc:5.3.6" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-expression:5.3.6" level="project" />
     <orderEntry type="library" name="Maven: com.baomidou:mybatis-plus-boot-starter:3.4.2" level="project" />
