@@ -23,11 +23,7 @@ public class ShoppingCartController {
     @Autowired
     private ShoppingCartService shoppingCartService;
 
-    /**
-     * 添加购物车
-     * @param shoppingCart
-     * @return
-     */
+    //添加购物车
     @PostMapping("/add")
     public R<ShoppingCart> add(@RequestBody ShoppingCart shoppingCart){
         log.info("购物车数据:{}",shoppingCart);
@@ -72,11 +68,58 @@ public class ShoppingCartController {
 
         return R.success(cartServiceOne);
     }
+    //购物车菜品清理数量
+    //仿照前面增加功能即可
+    @PostMapping("/sub")
+    public R<ShoppingCart> sub(@RequestBody ShoppingCart shoppingCart) {
+        Long dishId = shoppingCart.getDishId();
+        Long setmealId = shoppingCart.getSetmealId();
+        //条件构造器
+        LambdaQueryWrapper<ShoppingCart> queryWrapper = new LambdaQueryWrapper<>();
+        //查询当前用户ID的购物车
+        queryWrapper.eq(ShoppingCart::getUserId, BaseContext.getCurrentId());
+        //代表数量减少的是菜品数量
+        if (dishId != null) {
+            //通过dishId查出购物车菜品数据
+            queryWrapper.eq(ShoppingCart::getDishId, dishId);
+            ShoppingCart dishCart = shoppingCartService.getOne(queryWrapper);
+            //将查出来的数据的数量-1
+            dishCart.setNumber(dishCart.getNumber() - 1);
+            Integer currentNum = dishCart.getNumber();
+            //然后判断
+            if (currentNum > 0) {
+                //大于0则更新
+                shoppingCartService.updateById(dishCart);
+            } else if (currentNum == 0) {
+                //小于0则删除
+                shoppingCartService.removeById(dishCart.getId());
+            }
+            return R.success(dishCart);
+        }
 
-    /**
-     * 查看购物车
-     * @return
-     */
+        if (setmealId != null) {
+            //通过setmealId查询购物车套餐数据
+            queryWrapper.eq(ShoppingCart::getSetmealId, setmealId);
+            ShoppingCart setmealCart = shoppingCartService.getOne(queryWrapper);
+            //将查出来的数据的数量-1
+            setmealCart.setNumber(setmealCart.getNumber() - 1);
+            Integer currentNum = setmealCart.getNumber();
+            //然后判断
+            if (currentNum > 0) {
+                //大于0则更新
+                shoppingCartService.updateById(setmealCart);
+            } else if (currentNum == 0) {
+                //等于0则删除
+                shoppingCartService.removeById(setmealCart.getId());
+            }
+            return R.success(setmealCart);
+        }
+        return R.error("系统繁忙，请稍后再试");
+    }
+
+
+
+      //查看购物车
     @GetMapping("/list")
     public R<List<ShoppingCart>> list(){
         log.info("查看购物车...");
@@ -91,10 +134,8 @@ public class ShoppingCartController {
         return R.success(list);
     }
 
-    /**
-     * 清空购物车
-     * @return
-     */
+    //清空购物车
+
     @DeleteMapping("/clean")
     public R<String> clean(){
         //SQL:delete from shopping_cart where user_id = ?

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.reggie.common.BaseContext;
+import com.itheima.reggie.common.CustomException;
 import com.itheima.reggie.common.R;
 import com.itheima.reggie.entity.AddressBook;
 import com.itheima.reggie.service.AddressBookService;
@@ -25,7 +26,7 @@ public class AddressBookController {
     @Autowired
     private AddressBookService addressBookService;
 
-  //新增
+    //新增地址
     @PostMapping
     public R<AddressBook> save(@RequestBody AddressBook addressBook) {
         addressBook.setUserId(BaseContext.getCurrentId());
@@ -34,9 +35,8 @@ public class AddressBookController {
         return R.success(addressBook);
     }
 
-    /**
-     * 设置默认地址
-     */
+    //设置默认地址
+
     @PutMapping("default")
     public R<AddressBook> setDefault(@RequestBody AddressBook addressBook) {
         log.info("addressBook:{}", addressBook);
@@ -52,9 +52,9 @@ public class AddressBookController {
         return R.success(addressBook);
     }
 
-    /**
-     * 根据id查询地址
-     */
+
+    //根据id查询地址
+
     @GetMapping("/{id}")
     public R get(@PathVariable Long id) {
         AddressBook addressBook = addressBookService.getById(id);
@@ -65,9 +65,9 @@ public class AddressBookController {
         }
     }
 
-    /**
-     * 查询默认地址
-     */
+
+    //查询默认地址
+
     @GetMapping("default")
     public R<AddressBook> getDefault() {
         LambdaQueryWrapper<AddressBook> queryWrapper = new LambdaQueryWrapper<>();
@@ -84,9 +84,8 @@ public class AddressBookController {
         }
     }
 
-    /**
-     * 查询指定用户的全部地址
-     */
+    //查询指定用户的全部地址
+
     @GetMapping("/list")
     public R<List<AddressBook>> list(AddressBook addressBook) {
         addressBook.setUserId(BaseContext.getCurrentId());
@@ -100,4 +99,31 @@ public class AddressBookController {
         //SQL:select * from address_book where user_id = ? order by update_time desc
         return R.success(addressBookService.list(queryWrapper));
     }
+
+    //修改地址
+    @PutMapping
+    public R<String> updateAdd(@RequestBody AddressBook addressBook) {
+        if (addressBook == null) {
+            throw new CustomException("地址信息不存在，请刷新重试");
+        }
+        addressBookService.updateById(addressBook);
+        return R.success("地址修改成功");
+    }
+
+    //删除地址
+    @DeleteMapping()
+    public R<String> deleteAdd(@RequestParam("ids") Long id) {
+        if (id == null) {
+            throw new CustomException("地址信息不存在，请刷新重试");
+        }
+        AddressBook addressBook = addressBookService.getById(id);
+        if (addressBook == null) {
+            throw new CustomException("地址信息不存在，请刷新重试");
+        }
+        addressBookService.removeById(id);
+        return R.success("地址删除成功");
+    }
+    //再来一单(将orders表中的status字段为4会在订单表里出现此功能)
+    //点击后会自动将菜品添加到购物车
+
 }

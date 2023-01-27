@@ -9,4 +9,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartMapper, ShoppingCart> implements ShoppingCartService {
 
+    @Override
+    public void clean() {
+
+    }
 }

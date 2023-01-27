@@ -3,10 +3,14 @@ package com.itheima.reggie.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.reggie.common.R;
+import com.itheima.reggie.dto.DishDto;
 import com.itheima.reggie.dto.SetmealDto;
 import com.itheima.reggie.entity.Category;
+import com.itheima.reggie.entity.Dish;
 import com.itheima.reggie.entity.Setmeal;
+import com.itheima.reggie.entity.SetmealDish;
 import com.itheima.reggie.service.CategoryService;
+import com.itheima.reggie.service.DishService;
 import com.itheima.reggie.service.SetmealDishService;
 import com.itheima.reggie.service.SetmealService;
 import io.swagger.annotations.Api;
@@ -38,10 +42,13 @@ public class SetmealController {
     private SetmealService setmealService;
 
     @Autowired
+    private SetmealDishService setmealDishService;
+
+    @Autowired
     private CategoryService categoryService;
 
     @Autowired
-    private SetmealDishService setmealDishService;
+    private DishService dishService;
 
     //新增套餐
 
@@ -140,8 +147,6 @@ public class SetmealController {
     }
     //移动端查询套餐信息
     @GetMapping("/list")
-    @Cacheable(value = "setmealCache",key = "#setmeal.categoryId+'_'+#setmeal.status")
-    @ApiOperation(value = "套餐条件查询接口")
     public R<List<Setmeal>> list(Setmeal setmeal){
         LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(setmeal.getCategoryId() != null,Setmeal::getCategoryId,setmeal.getCategoryId());
@@ -151,6 +156,26 @@ public class SetmealController {
         List<Setmeal> list = setmealService.list(queryWrapper);
 
         return R.success(list);
+    }
+    //将套餐里的菜品信息展示出来
+    @GetMapping("/dish/{id}")
+    public R<List<DishDto>> dish(@PathVariable("id") Long SetmealId){
+        LambdaQueryWrapper<SetmealDish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SetmealDish::getSetmealId,SetmealId);
+        //获取套餐里面的所有菜品，这个就是SetmealDish表里面的数据
+        List<SetmealDish> setmealDishList = setmealDishService.list(queryWrapper);
+        List<DishDto> dishDtoList = setmealDishList.stream().map((setmealDish -> {
+            DishDto dishDto = new DishDto();
+            //其实这个BeanUtils的拷贝是浅拷贝
+            BeanUtils.copyProperties(setmealDish, dishDto);
+            //把套餐中的菜品的基本信息填充到dto中，比如菜品描述，菜品图片等菜品的基本信息
+            Long dishId = setmealDish.getDishId();
+            Dish dish = dishService.getById(dishId);
+            BeanUtils.copyProperties(dish, dishDto);
+            return dishDto;
+        })).collect(Collectors.toList());
+
+        return R.success(dishDtoList);
     }
 
 }
