@@ -1,6 +1,5 @@
 package com.itheima.reggie.common;
 
-import com.sun.source.doctree.SerialDataTree;
 import lombok.Data;
 
 import java.io.Serializable;
