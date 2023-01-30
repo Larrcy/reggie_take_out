@@ -123,7 +123,5 @@ public class AddressBookController {
         addressBookService.removeById(id);
         return R.success("地址删除成功");
     }
-    //再来一单(将orders表中的status字段为4会在订单表里出现此功能)
-    //点击后会自动将菜品添加到购物车
 
 }
