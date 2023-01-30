@@ -199,12 +199,5 @@ public class OrderController {
 
         return R.success("订单信息修改成功");
     }
-    //退出登录
-    @PostMapping("/loginout")
-    public R<String> logout(HttpServletRequest request) {
-        request.getSession().removeAttribute("user");
-        return R.success("退出成功");
-    }
-
 
 }

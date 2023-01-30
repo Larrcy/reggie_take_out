@@ -1,5 +1,6 @@
 package com.itheima.reggie.controller;
 
+import com.alibaba.druid.sql.visitor.functions.Char;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.reggie.common.R;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Scanner;
 
 @Slf4j
 @RestController
@@ -109,6 +111,8 @@ public class EmployeeController {
         根据id修改员工信息
          */
     @PutMapping
+
+    //post请求可加requestbody json数据模式
     public R<String> update(HttpServletRequest request, @RequestBody Employee employee) {
         //只有管理员才有资格对员工账号进行启用禁用 故要利用request获取管理员id
         log.info(employee.toString());
@@ -125,6 +129,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
+    //接收请求路径中占位符的值
     public R<Employee> getById(@PathVariable Long id) {
         log.info("根据id查询员工信息");
         Employee employee = employeeService.getById(id);
